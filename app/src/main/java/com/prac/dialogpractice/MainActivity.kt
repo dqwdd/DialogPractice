@@ -22,7 +22,10 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var datePicker: DatePickerHelper
 
+    lateinit var timePicker: TimePickerHelper
+
     lateinit var binding: ActivityMainBinding
+
 
     val mSelectedDateTime = Calendar.getInstance()//기본값 = 현재 시간
 
@@ -36,25 +39,32 @@ class MainActivity : AppCompatActivity() {
             showTimePickerDialog(View(this))
         }
 
-        //날짜 피커
+        //날짜 피커 - spinner
         binding.showDatePickerDialog.setOnClickListener {
             showDatePickerDialog(View(this))
         }
 
 
-
+        //스피너 날짜 피커
         datePicker = DatePickerHelper(this, true)
 
-        //스피너 형태의 날짜 피커
         binding.showDatePickerDialog2.setOnClickListener {
-            showDatePickerDialog()
+            showDatePickerDialog2()
         }
+
+
+
+        //스피너 시간 피커
+        timePicker = TimePickerHelper(this, false, true)
+        binding.showTimePickerDialog2.setOnClickListener {
+            showTimePickerDialog2()
+        }
+
+
 
 
         //날짜 선택 후 확인 누르면 시간 나오게 하기
         binding.dateTxt.setOnClickListener {
-
-//            DatePicker 띄우기 -> 입력 완료되면, 연/월/일을 제공해줌
 //            mSelectedDateTime에 연/월/일 저장
             val dateSetListener = object : DatePickerDialog.OnDateSetListener {
                 override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
@@ -62,10 +72,9 @@ class MainActivity : AppCompatActivity() {
 //                    선택된 날짜로서 지정
                     mSelectedDateTime.set(year, month, day)
 
-//                    선택된 날짜로 문구 변경=> 2021-9-13 (월요일)
+//                    선택된 날짜로 문구 변경
                     val sdf = SimpleDateFormat("yyyy. M. d (E)")
                     binding.dateTxt.text = sdf.format( mSelectedDateTime.time )
-
 
                 }
             }
@@ -75,10 +84,13 @@ class MainActivity : AppCompatActivity() {
                 mSelectedDateTime.get(Calendar.MONTH),
                 mSelectedDateTime.get(Calendar.DAY_OF_MONTH))
 
+            /*
             dpd.setButton(DialogInterface.BUTTON_POSITIVE, "확인", DialogInterface.OnClickListener {
                     dialogInterface, i ->
                 binding.textView.text = "성공"
             })
+            */
+
             dpd.show()
 
             // binding.textView.text = "성공"
@@ -126,7 +138,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private fun showDatePickerDialog() {
+    private fun showDatePickerDialog2() {
         val cal = Calendar.getInstance()
         val d = cal.get(Calendar.DAY_OF_MONTH)
         val m = cal.get(Calendar.MONTH)
@@ -139,6 +151,24 @@ class MainActivity : AppCompatActivity() {
                 binding.textView.text = "${dayStr}-${monthStr}-${year}"
             }
         })
-
     }
+
+
+
+
+    private fun showTimePickerDialog2() {
+        val cal = Calendar.getInstance()
+        val h = cal.get(Calendar.HOUR_OF_DAY)
+        val m = cal.get(Calendar.MINUTE)
+        timePicker.showDialog(h, m, object : TimePickerHelper.Callback {
+            override fun onTimeSelected(hourOfDay: Int, minute: Int) {
+                val hourStr = if (hourOfDay < 10) "0${hourOfDay}" else "${hourOfDay}"
+                val minuteStr = if (minute < 10) "0${minute}" else "${minute}"
+                binding.textView.text = "${hourOfDay}:${minuteStr}"
+            }
+        })
+    }
+
+
+
 }

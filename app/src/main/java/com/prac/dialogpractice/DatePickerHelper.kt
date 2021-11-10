@@ -9,7 +9,7 @@ class DatePickerHelper(context: Context, isSpinnerType: Boolean = false) {
     private var callback: Callback? = null
     private val listener =
         DatePickerDialog.OnDateSetListener { datePicker, year, monthOfYear, dayOfMonth ->
-            callback?.onDateSelected(dayOfMonth, monthOfYear, year)
+            callback?.onDateSelected(year, monthOfYear, dayOfMonth)
         }
     init {
         val style = if (isSpinnerType) R.style.SpinnerDatePickerDialog else 0
